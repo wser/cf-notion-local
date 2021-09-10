@@ -1,3 +1,4 @@
+module.exports = `
 .notion-frame { background-image: linear-gradient(180deg, #fdfbfb 0, #ebedee 100%) !important;}
 
 .notion-dark-theme > div > .notion-frame { 
@@ -47,3 +48,5 @@ div.notion-topbar-mobile > div:nth-child(5) { display: none !important;}
         background-position: 0% 50%;
     }
 }
+
+`;
