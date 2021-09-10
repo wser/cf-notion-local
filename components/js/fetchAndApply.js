@@ -1,4 +1,4 @@
-import { handleOptions } from './components/js/cors';
+import { handleOptions } from './cors';
 
 export async function fetchAndApply(request, MY_DOMAIN, SLUG_TO_PAGE) {
   if (request.method === 'OPTIONS') return handleOptions(request);
