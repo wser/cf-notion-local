@@ -1,4 +1,5 @@
 /* CONFIGURATION STARTS HERE */
+import './file.js';
 
 /* Step 1: enter your domain name like fruitionsite.com */
 //const MY_DOMAIN = 'vikt0r.com';
@@ -17,7 +18,7 @@ const SLUG_TO_PAGE = {
 };
 
 /* Step 3: enter your page title and description for SEO purposes */
-const PAGE_TITLE = 'vikt0r.com';
+const PAGE_TITLE = 'notion.wser-web.workers.dev';
 const PAGE_DESCRIPTION = 'my page from notion';
 
 /* Step 4: enter a Google Font name, you can choose from https://fonts.google.com */
