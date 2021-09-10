@@ -1,11 +1,11 @@
 /* CONFIGURATION STARTS HERE */
-import { handleOptions } from './components/cors';
+import { fetchAndApply } from './components/js/fetchAndApply';
 import {
   onDark,
   onLight,
   toggle,
   addDarkModeButton,
-} from './components/toggleDarkMode';
+} from './components/js/toggleDarkMode';
 
 /* Step 1: enter your domain name like fruitionsite.com */
 //const MY_DOMAIN = 'vikt0r.com';
@@ -43,68 +43,11 @@ const TOGGLE_DARK_MODE_SCRIPT = `
 `;
 
 /**CSS */
-const TOGGLE_DARK_MODE_CSS = `
-    div.notion-topbar > div > div:nth-child(3) { display: none !important; }
-    div.notion-topbar > div > div:nth-child(4) { display: none !important; }
-    div.notion-topbar > div > div:nth-child(5) { display: none !important; }    
-    div.notion-topbar > div > div:nth-child(6) { display: none !important; }
-    div.notion-topbar-mobile > div:nth-child(3) { display: none !important; }
-    div.notion-topbar-mobile > div:nth-child(4) { display: none !important; }
-    div.notion-topbar > div > div:nth-child(1n).toggle-mode { display: block !important; }
-    div.notion-topbar-mobile > div:nth-child(1n).toggle-mode { display: block !important; }
-`;
+import toggle_dark_mode from './components/css/toggle_dark_mode.css';
+import custom_css from './components/css/custom.css';
 
-const CUSTOM_CSS = `
-    .notion-frame { background-image: linear-gradient(180deg, #fdfbfb 0, #ebedee 100%) !important;}
-
-    .notion-dark-theme > div > .notion-frame { 
-        background-image: linear-gradient(180deg, #000 0, rgba(135, 131, 120, 0.3) 100%) !important;
-    }
-    .notion-dark-theme > div > div > div > .notion-page-content { background:rgb(47, 52, 55);}    
-    
-    @keyframes gradient { 
-        0% { background-position: 0 50% !important;}
-        50% {background-position: 100% 50%;}
-        100% { background-position: 0 50%; }
-    }    
-    .notion-page-content {
-        padding-bottom: 2.5rem !important;
-        padding-top: 2.5rem !important;
-        background: #fff;
-        border-radius: 1rem;
-        margin: -2.75rem 0 10vh 0;
-    }
- 
-    .notion-page-block { position: relative;}
-    .notion-scroller > [style='width: 100%; font-size: 14px;'] { margin-bottom: 1.5rem;}
-    .notion-image-block { pointer-events: none !important;}
-    .notion-image-block img { pointer-events: none !important;}
-    .notion-callout-block > div > div { border-radius: 0.5rem !important;}
-    .notion-peek-renderer { background: #142025 !important; transition: 0.3s;}
-    .notion-peek-renderer > div:nth-child(2) { border-radius: 0.5rem !important; overflow: hidden;}
-    .notion-gallery-view > div > div > a { border-radius: 0.5rem !important;}
-    .notion-gallery-view > div > div > a:hover { opacity: 0.75;}
-    .notion-scroller > div:nth-child(2) > div { opacity: 0 !important; pointer-events: none !important;}
-    div.notion-topbar-mobile > div:nth-child(5) { display: none !important;}
-
-    .notion-body {
-        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-        background-size: 400% 400%;
-        animation: gradient 10s ease infinite;
-    }
-
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-`;
+const TOGGLE_DARK_MODE_CSS = `${toggle_dark_mode}`;
+const CUSTOM_CSS = `${custom_css}`;
 
 /* CONFIGURATION ENDS HERE */
 
@@ -132,59 +75,7 @@ function generateSitemap() {
   return sitemap;
 }
 
-async function fetchAndApply(request) {
-  if (request.method === 'OPTIONS') return handleOptions(request);
-  let url = new URL(request.url);
-  url.hostname = 'www.notion.so';
-  if (url.pathname === '/robots.txt')
-    return new Response('Sitemap: https://' + MY_DOMAIN + '/sitemap.xml');
-  if (url.pathname === '/sitemap.xml') {
-    let response = new Response(generateSitemap());
-    response.headers.set('content-type', 'application/xml');
-    return response;
-  }
-  let response;
-  if (url.pathname.startsWith('/app') && url.pathname.endsWith('js')) {
-    response = await fetch(url.toString());
-    let body = await response.text();
-    response = new Response(
-      body.replace(/www.notion.so/g, MY_DOMAIN).replace(/notion.so/g, MY_DOMAIN),
-      response
-    );
-    response.headers.set('Content-Type', 'application/x-javascript');
-    return response;
-  } else if (url.pathname.startsWith('/api')) {
-    // Forward API
-    response = await fetch(url.toString(), {
-      body: url.pathname.startsWith('/api/v3/getPublicPageData')
-        ? null
-        : request.body,
-      headers: {
-        'content-type': 'application/json;charset=UTF-8',
-        'user-agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
-      },
-      method: 'POST',
-    });
-    response = new Response(response.body, response);
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    return response;
-  } else if (slugs.indexOf(url.pathname.slice(1)) > -1) {
-    const pageId = SLUG_TO_PAGE[url.pathname.slice(1)];
-    return Response.redirect('https://' + MY_DOMAIN + '/' + pageId, 301);
-  } else {
-    response = await fetch(url.toString(), {
-      body: request.body,
-      headers: request.headers,
-      method: request.method,
-    });
-    response = new Response(response.body, response);
-    response.headers.delete('Content-Security-Policy');
-    response.headers.delete('X-Content-Security-Policy');
-  }
-
-  return appendJavascript(response, SLUG_TO_PAGE);
-}
+fetchAndApply(request, MY_DOMAIN, SLUG_TO_PAGE);
 
 class MetaRewriter {
   element(element) {
