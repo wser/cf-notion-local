@@ -1,5 +1,5 @@
 /* CONFIGURATION STARTS HERE */
-import './file.js';
+import { handleOptions } from './cors.js';
 
 /* Step 1: enter your domain name like fruitionsite.com */
 //const MY_DOMAIN = 'vikt0r.com';
@@ -144,32 +144,6 @@ function generateSitemap() {
   );
   sitemap += '</urlset>';
   return sitemap;
-}
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
-
-function handleOptions(request) {
-  if (
-    request.headers.get('Origin') !== null &&
-    request.headers.get('Access-Control-Request-Method') !== null &&
-    request.headers.get('Access-Control-Request-Headers') !== null
-  ) {
-    // Handle CORS pre-flight request.
-    return new Response(null, {
-      headers: corsHeaders,
-    });
-  } else {
-    // Handle standard OPTIONS request.
-    return new Response(null, {
-      headers: {
-        Allow: 'GET, HEAD, POST, PUT, OPTIONS',
-      },
-    });
-  }
 }
 
 async function fetchAndApply(request) {
