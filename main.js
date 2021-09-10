@@ -10,7 +10,7 @@ const MY_DOMAIN = 'https://notion.wser-web.workers.dev';
  * The value on the right is the Notion page ID
  */
 const SLUG_TO_PAGE = {
-  '': 'b7d688b35fcc4932be51534b7e66c4da',
+  '': '9130d1a3bb7646738d71dd376d41ab9e',
   // "about": "<NOTION PAGE ID>",   // page with about info
   // "blog": "<NOTION PAGE ID>",    // your blog page
   // "contact": "<NOTION PAGE ID>", // feedback form

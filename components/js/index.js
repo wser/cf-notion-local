@@ -1,3 +1,5 @@
+import { TOGGLE_DARK_MODE_CSS } from '../css/toggle_dark_mode';
+
 export default function mainScript(
   MY_DOMAIN,
   SLUG_TO_PAGE,
@@ -7,8 +9,6 @@ export default function mainScript(
   CUSTOM_SCRIPT,
   CUSTOM_CSS
 ) {
-  import { TOGGLE_DARK_MODE_CSS } from '../css/toggle_dark_mode';
-
   const TOGGLE_DARK_MODE_SCRIPT = `
 function onDark() {
     el.innerHTML = '<div title="Change to Light Mode" style="margin-left: auto; margin-right: 14px; min-width: 0px;"><div role="button" tabindex="0" style="user-select: none; transition: background 120ms ease-in 0s; cursor: pointer; border-radius: 44px;"><div style="display: flex; flex-shrink: 0; height: 14px; width: 26px; border-radius: 44px; padding: 2px; box-sizing: content-box; background: rgb(46, 170, 220); transition: background 200ms ease 0s, box-shadow 200ms ease 0s;"><div style="width: 14px; height: 14px; border-radius: 44px; background: white; transition: transform 200ms ease-out 0s, background 200ms ease-out 0s; transform: translateX(12px) translateY(0px);"></div></div></div></div>';
